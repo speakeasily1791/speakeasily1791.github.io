@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to use Speak Easily</title>
+<meta name="description" content="Watch how to use Speak Easily in your language — English, Hindi, Tamil and more.">
+<style>
+  :root { --brand:#5B4FE0; --brand-dark:#3F33B8; --soft:#EEEBFF; --ink:#1c1b22; --muted:#5f5c6b; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,"Segoe UI",Roboto,"Noto Sans","Noto Sans Devanagari","Noto Sans Tamil",sans-serif; color:var(--ink); background:#fbfaff; line-height:1.5; }
+  header { background:linear-gradient(135deg,var(--brand),var(--brand-dark)); color:#fff; padding:28px 20px 24px; text-align:center; }
+  h1 { margin:0 0 4px; font-size:26px; }
+  header p { margin:0; color:#E4DFFF; }
+  main { max-width:760px; margin:0 auto; padding:20px 16px 40px; }
+  .label { font-weight:700; margin:4px 0 10px; }
+  .langs { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
+  .langs button { border:2px solid var(--brand); background:#fff; color:var(--brand-dark); font-size:17px; font-weight:700; padding:10px 18px; border-radius:999px; cursor:pointer; }
+  .langs button.active { background:var(--brand); color:#fff; }
+  video { width:100%; border-radius:16px; background:#000; box-shadow:0 8px 24px rgba(0,0,0,.18); }
+  .note { background:var(--soft); border-radius:14px; padding:12px 16px; margin-top:16px; font-size:15px; }
+  .cta { display:block; text-align:center; margin-top:22px; background:var(--brand); color:#fff; font-weight:800; font-size:18px; text-decoration:none; padding:14px; border-radius:999px; }
+  footer { text-align:center; color:var(--muted); font-size:14px; padding:0 20px 28px; }
+  a { color:var(--brand-dark); }
+</style>
+</head>
+<body>
+<header>
+  <h1>How to use Speak Easily</h1>
+  <p>Choose your language · अपनी भाषा चुनिए · உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</p>
+</header>
+<main>
+  <div class="label">🌐 Language</div>
+  <div class="langs" id="langs"></div>
+  <video id="player" controls playsinline preload="metadata"></video>
+  <div class="note">💡 Button names like <b>Study</b>, <b>Speak</b> and <b>Listen</b> are shown in English in every video — exactly as they appear in the app.</div>
+  <a class="cta" href="install.html">⬇️ Download Speak Easily</a>
+</main>
+<footer>No login · No ads · <a href="privacy-policy.html">Privacy policy</a></footer>
+<script>
+  // Add a language here when its video is in /videos (SpeakEasily-HowTo-<code>.mp4).
+  const LANGS = [
+    { code: "en", name: "English" },
+    { code: "hi", name: "हिन्दी" },
+    { code: "ta", name: "தமிழ்" },
+  ];
+  const player = document.getElementById("player");
+  const box = document.getElementById("langs");
+  function choose(code, autoplay) {
+    player.src = "videos/SpeakEasily-HowTo-" + code + ".mp4";
+    for (const b of box.children) b.classList.toggle("active", b.dataset.code === code);
+    history.replaceState(null, "", "#" + code);
+    if (autoplay) player.play().catch(() => {});
+  }
+  for (const l of LANGS) {
+    const b = document.createElement("button");
+    b.textContent = l.name; b.dataset.code = l.code;
+    b.onclick = () => choose(l.code, true);
+    box.appendChild(b);
+  }
+  // Start with the language in the link (e.g. how-to.html#hi), else the phone's language, else English.
+  const fromHash = location.hash.slice(1);
+  const fromPhone = (navigator.language || "en").slice(0, 2);
+  const start = [fromHash, fromPhone, "en"].find(c => LANGS.some(l => l.code === c));
+  choose(start, false);
+</script>
+</body>
+</html>
